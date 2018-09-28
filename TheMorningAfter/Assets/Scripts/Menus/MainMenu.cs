@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour {
 
+    private static GameObject helpMenu;
+
 	// Use this for initialization
 	void Start () 
     {
@@ -24,31 +26,38 @@ public class MainMenu : MonoBehaviour {
             }
         }
 
-        GameObject backButton = GameObject.FindGameObjectWithTag("BackButton");
-        if (backButton != null)
-            GameObject.FindGameObjectWithTag("MainCameraEventSystem").GetComponent<EventSystem>().SetSelectedGameObject(backButton);
+        //GameObject backButton = GameObject.FindGameObjectWithTag("BackButton");
+        //if (backButton != null)
+        //{
+        //    GameObject.FindGameObjectWithTag("MainCameraEventSystem").GetComponent<EventSystem>().SetSelectedGameObject(backButton);
+        //}
+        //else
+        //{
+        //    GameObject playButton = GameObject.FindGameObjectWithTag("PlayButton");
+        //    GameObject.FindGameObjectWithTag("MainCameraEventSystem").GetComponent<EventSystem>().SetSelectedGameObject(playButton);
+        //}
 
 
         AudioManager.Stop();
         AudioManager.Play(AudioClipName.MenuMusic);
 	}
 
-    bool hasKeyUp;
+    //bool hasKeyUp;
 
-    private void Update()
-    {
-        if (GameObject.FindGameObjectWithTag("HelpMenu") != null && hasKeyUp)
-        {
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                hasKeyUp = true;
-                back();
-            }
-        }
+    //private void Update()
+    //{
+    //    if (helpMenu != null && hasKeyUp)
+    //    {
+    //        if (Input.GetKeyDown(KeyCode.Return))
+    //        {
+    //            hasKeyUp = false;
+    //            back();
+    //        }
+    //    }
 
-        if (Input.GetKeyUp(KeyCode.Return))
-            hasKeyUp = true;
-    }
+    //    if (Input.GetKeyUp(KeyCode.Return))
+    //        hasKeyUp = true;
+    //}
 
     public void HandlePlayButtonOnClickEvent()
     {
@@ -83,7 +92,7 @@ public class MainMenu : MonoBehaviour {
         GameObject mainMenuCanvas = GameObject.Find(GameConstants.MAINMENUCANVAS);
         if (mainMenuCanvas != null)
             mainMenuCanvas.SetActive(false);
-        MenuManager.GoToMenu(MenuName.Help);
+        helpMenu = MenuManager.GoToMenu(MenuName.Help);
     }
 
     public void HandleBackButtonOnClickEvent()
@@ -94,6 +103,11 @@ public class MainMenu : MonoBehaviour {
     private static void back()
     {
         AudioManager.PlayOneShot(AudioClipName.Click);
+        //if (helpMenu != null)
+        //{
+        //    Destroy(helpMenu);
+        //    helpMenu = null;
+        //}
         MenuManager.GoToMenu(MenuName.Main);
     }
 }

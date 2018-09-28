@@ -9,7 +9,7 @@ public static class MenuManager
     /// Gos to menu.
     /// </summary>
     /// <param name="menuName">Menu name.</param>
-    public static void GoToMenu(MenuName menuName)
+    public static GameObject GoToMenu(MenuName menuName)
     {
         switch (menuName)
         {
@@ -17,17 +17,16 @@ public static class MenuManager
                 SceneManager.LoadScene("MainMenu");
                 break;
             case MenuName.Pause:
-                Object.Instantiate(Resources.Load("Menus/PauseMenu"));
-                break;
+                return Object.Instantiate(Resources.Load("Menus/PauseMenu")) as GameObject;
             case MenuName.Help:
-                Object.Instantiate(Resources.Load("Menus/HelpMenu"));
-                break;
+                return Object.Instantiate(Resources.Load("Menus/HelpMenu")) as GameObject;
             case MenuName.Quit:
                 Application.Quit();
                 break;
             case MenuName.GameOver:
-                Object.Instantiate(Resources.Load("Menus/GameOverMenu"));
-                break;
+                return Object.Instantiate(Resources.Load("Menus/GameOverMenu")) as GameObject;
         }
+
+        return null;
     }
 }
