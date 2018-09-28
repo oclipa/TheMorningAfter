@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Platform
+  - Wall
+  - Obstacle
+  - Ladder
+  - Ramp
+  - RopeAnchor
+  - Item
+  - FinalScoreText
+  - FinalStateText
+  - RoomTitleText
+  - MainCameraEventSystem
+  - GameAudioSource
+  - RopeSection
+  - ScoreBoard
+  - LivesRemainingText
+  - ItemsCollectedText
+  - Scenery
+  - Maria
+  - Door
+  - ScoreBoardPanel
+  - LivesSprite
+  - GameTitleText
+  - BlankScreenBackground
+  - BlankScreenCanvas
+  - DebugText
+  - TimeText
+  - LoadingText
+  - LoadingBackground
+  - LoadingCanvas
+  - LoadingTitle
+  - QuitButton
+  - HelpButton
+  - PlayButton
+  - HelpMenu
+  - ResumeButton
+  - BackButton
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Ladder
+  - Obstacle
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Platform
+    uniqueID: 1561624575
+    locked: 0
+  - name: Wall
+    uniqueID: 520181411
+    locked: 0
+  - name: Ladder
+    uniqueID: 1673058347
+    locked: 0
