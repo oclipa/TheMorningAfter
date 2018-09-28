@@ -45,4 +45,6 @@ public interface IRoom {
     bool HasItems { get; }
 
     bool AddItem(string itemID);
+
+    void Reset();
 }

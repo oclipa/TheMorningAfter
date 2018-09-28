@@ -183,6 +183,11 @@ public class Room : IRoom {
         return false;
     }
 
+    public void Reset()
+    {
+        this.collectedItemIds.Clear();
+    }
+
     private void ItemCollected(string itemID)
     {
         this.collectedItemIds.Add(itemID);

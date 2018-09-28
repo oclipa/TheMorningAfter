@@ -38,6 +38,8 @@ public class RoomBuilder : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        Blueprints.ResetRooms();
+
         // build the first room
         currentRoom = Blueprints.GetRoom("TheBathroom");
         BuildRoom(currentRoom, new Vector3(0.82f, -0.185f, 0));

@@ -54,4 +54,12 @@ public static class Blueprints {
     {
         return new List<string>(rooms.Keys);
     }
+
+    public static void ResetRooms()
+    {
+        foreach(KeyValuePair<string, IRoom> kvp in rooms)
+        {
+            kvp.Value.Reset();
+        }
+    }
 }
