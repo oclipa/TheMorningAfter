@@ -42,8 +42,9 @@ public class RoomBuilder : MonoBehaviour {
 
         // build the first room
         currentRoom = Blueprints.GetRoom("TheBathroom");
-        BuildRoom(currentRoom, new Vector3(0.82f, -0.185f, 0));
-        //BuildRoom(rooms["TheLoft"], new Vector3(-8.5f, -2.0f, 0));
+        BuildRoom(currentRoom, new Vector3(0.82f, -0.185f, 0)); // TheBathroom
+        //BuildRoom(currentRoom, new Vector3(-8.5f, -2.0f, 0)); // TheLoft
+        //BuildRoom(currentRoom, new Vector3(7.43f, 0f, 0)); // TheTreeTrunk
 
         // initialize the screen boundaries
         ScreenUtils.Initialize();

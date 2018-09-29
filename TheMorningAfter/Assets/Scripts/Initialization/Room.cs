@@ -218,7 +218,7 @@ public class Room : IRoom {
                     if (y > 4.84) { y = 4.36f; } // hole in ceiling
                     if (y < -2.24) // hole in floor
                     {
-                        x = x - 0.48f; // don't want to fall down the hole!
+                        //x = x - 0.48f; // don't want to fall down the hole!
                         y = -1.76f; 
                     }
                     return new Vector3(x, y, 0);

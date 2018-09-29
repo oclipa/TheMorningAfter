@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour, IPlayerDiedInvoker
 
     //some flags to check when certain animations are playing
     private bool isJumping = false; // is the player jumping?
+    private bool onLadder = false;
 
     //animation states - the values in the animator conditions
     private const int STATE_WALK_LEFT = 0;
@@ -67,7 +68,7 @@ public class PlayerController : MonoBehaviour, IPlayerDiedInvoker
 
     private void Update()
     {
-        if (maybeFalling)
+        if (maybeFalling && !onLadder)
         {
             // can fall three body lengths without dying
             float currentY = transform.position.y;
@@ -275,6 +276,10 @@ public class PlayerController : MonoBehaviour, IPlayerDiedInvoker
         {
             this.playerDiedEvent.Invoke(this.startPosition);
         }
+        else if (collidedGameObject.CompareTag(GameConstants.LADDER))
+        {
+            onLadder = true;
+        }
     }
 
     private void collisionStay(GameObject collidedGameObject)
@@ -301,6 +306,10 @@ public class PlayerController : MonoBehaviour, IPlayerDiedInvoker
         {
             stopJumping(collidedGameObject);
         }
+        else if (collidedGameObject.CompareTag(GameConstants.LADDER))
+        {
+            onLadder = true;
+        }
     }
 
     private void collisionExit(GameObject collidedGameObject)
@@ -310,6 +319,11 @@ public class PlayerController : MonoBehaviour, IPlayerDiedInvoker
         // no longer touching an object, so maybe falling
         this.maybeFalling = true;
         this.initialY = transform.position.y;
+
+        if (collidedGameObject.CompareTag(GameConstants.LADDER))
+        {
+            onLadder = false;
+        }
     }
 
     private void stopJumping(GameObject collidedGameObject)
