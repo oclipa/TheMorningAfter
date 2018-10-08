@@ -13,7 +13,8 @@ public class Ramp : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        slopeNormalX = -1 * Mathf.Sin(transform.rotation.z * Mathf.Deg2Rad);
+        float slopeRadians = transform.rotation.z * Mathf.Deg2Rad;
+        slopeNormalX = -1 * Mathf.Sin(slopeRadians);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -28,10 +29,9 @@ public class Ramp : MonoBehaviour
             int numOfContacts = collision.GetContacts(contacts);
 
             // Is the player jumping?
-            if (collision.gameObject.
-                    GetComponent<PlayerController>().IsJumping)
+            if (!collision.gameObject.GetComponent<PlayerController>().IsSolid)
             {
-                GetComponent<Collider2D>().isTrigger = true;
+                //GetComponent<Collider2D>().isTrigger = true;
             }
             else if (numOfContacts > 0)
             {
@@ -44,7 +44,14 @@ public class Ramp : MonoBehaviour
                 }
             }
         }
+    }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!collision.gameObject.GetComponent<PlayerController>().IsSolid)
+        {
+            GetComponent<Collider2D>().isTrigger = true;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -58,25 +65,8 @@ public class Ramp : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Provide properties that allow the player to update their position
-    ///  on the ramp as they move up it (allowing for the slope of the ramp)
-    /// </summary>
-    public void HelpUpSlope(ref Vector2 playerVelocity, 
-                                ref Vector3 playerPosition)
+    public float SlopeNormalX
     {
-        float playerVelocityX = playerVelocity.x;
-        float playerVelocityY = playerVelocity.y;
-
-        // Apply the opposite force against the slope force 
-        playerVelocity = new Vector2(playerVelocityX
-                                     - (slopeNormalX * GameConstants.SLOPE_FRICTION), 
-                                            playerVelocityY);
-
-        //Move Player up or down to compensate for the slope below them
-        playerPosition.y += -slopeNormalX 
-                                * Mathf.Abs(playerVelocityX) 
-                                * Time.fixedDeltaTime 
-                                * (playerVelocityX - slopeNormalX > 0 ? 1 : -1);
+        get { return this.slopeNormalX; }
     }
 }

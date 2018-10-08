@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114388894379613980}
   m_Layer: 0
   m_Name: SceneryObstacle
-  m_TagString: Scenery
+  m_TagString: SceneryObstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour {
 
-    private static GameObject helpMenu;
+    //private static GameObject helpMenu;
 
 	// Use this for initialization
 	void Start () 
@@ -92,7 +92,7 @@ public class MainMenu : MonoBehaviour {
         GameObject mainMenuCanvas = GameObject.Find(GameConstants.MAINMENUCANVAS);
         if (mainMenuCanvas != null)
             mainMenuCanvas.SetActive(false);
-        helpMenu = MenuManager.GoToMenu(MenuName.Help);
+        MenuManager.GoToMenu(MenuName.Help);
     }
 
     public void HandleBackButtonOnClickEvent()

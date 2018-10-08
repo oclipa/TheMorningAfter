@@ -12,6 +12,9 @@ public static class GameConstants {
     public const string SPACE = "space";
     public const string HORIZONTAL = "Horizontal";
     public const string VERTICAL = "Vertical";
+    public const string UP = "Up";
+    public const string DOWN = "Down";
+    public const string STATIONARY = "Stationary";
     public const string FORWARD = "forward";
     public const string BACKWARD = "backward";
 
@@ -34,7 +37,7 @@ public static class GameConstants {
     public const string MOVING_OBSTACLE = "MovingObstacle";
     public const string SCENERY_OBSTACLE = "SceneryObstacle";
     public const string LADDER = "Ladder";
-    public static string RAMP = "Ramp";
+    public const string RAMP = "Ramp";
     public const string ROPE_ANCHOR = "RopeAnchor";
     public const string ROPE_SECTION = "RopeSection";
     public const string ITEM = "Item";
@@ -46,8 +49,9 @@ public static class GameConstants {
     public const string MAINMENUCANVAS = "MainMenuCanvas";
 
     public const float PLAYER_WALK_SPEED = 2f;
+    public const float PLAYER_CLIMB_SPEED = 2f;
     public const float PLAYER_JUMP_SPEED_X = 25f;
-    public const float PLAYER_JUMP_SPEED_Y = 140f; // 275f
+    public const float PLAYER_JUMP_SPEED_Y = 140f; //140f; // 275f
 
     public const float OBSTACLE_WALK_SPEED_X = 2f;
     public const float OBSTACLE_WALK_SPEED_Y = 1.2f;
@@ -60,4 +64,9 @@ public static class GameConstants {
 
     // Provide SLOPE_FRICTION to stabilize movement
     public const float SLOPE_FRICTION = 10f;
+
+    public const int ANIMATION_WALK_RIGHT = 0;
+    public const int ANIMATION_WALK_LEFT = 1;
+    public const int ANIMATION_IDLE = 2;
+    public const int ANIMATION_JUMP = 3;
 }

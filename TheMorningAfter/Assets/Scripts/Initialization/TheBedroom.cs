@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TheBedroom : Room
 {
-    public static string NAME = "The Bedroom";
+    public const string NAME = "The Bedroom";
 
     public TheBedroom()
         : base()

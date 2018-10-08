@@ -222,8 +222,8 @@ MonoBehaviour:
     are littered around the house.  \n\nNaturally, life is never simple and the fallout
     from The Event has left the house populated with some strange creatures who are
     not going to make our hero's task easy.\n\n\nUse the arrow or WASD keys to navigate
-    the platforms.\n\nJump using the Spacebar.\n\nRamps can be passed through by jumping
-    on them."
+    the platforms.\n\nJump using the Spacebar.\n\nPass through ramps using Down or
+    S."
 --- !u!114 &114272861977055138
 MonoBehaviour:
   m_ObjectHideFlags: 1

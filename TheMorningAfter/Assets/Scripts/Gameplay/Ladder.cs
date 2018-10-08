@@ -11,12 +11,6 @@ public class Ladder : MonoBehaviour
     // controls movement up and down itself.
     GameObject playerOBJ;
 
-    // flag to determine if ladder is controlling movement
-    bool canClimb = false;
-
-    // speed of movement up/down ladder
-    float speed = 2;
-
     // We need to ensure that the player can pass through any
     // platforms that intersect the ladder.
     List<GameObject> intersectingPlatforms = new List<GameObject>();
@@ -48,9 +42,6 @@ public class Ladder : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(GameConstants.PLAYER))
         {
-            // ladder is controlling
-            canClimb = true;
-
             // need to stop the player moving unnecessarily
             playerOBJ = collision.gameObject;
             playerOBJ.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
@@ -79,26 +70,23 @@ public class Ladder : MonoBehaviour
             // ensure player is affected by gravity again
             playerOBJ.GetComponent<Rigidbody2D>().gravityScale = 1;
 
-            // prevent ladder controlling movement
-            canClimb = false;
-
             playerOBJ = null;
         }
     }
 
-    void FixedUpdate()
-    {
-        // if ladder controls movement
-        if (canClimb && playerOBJ != null)
-        {
-            if (Input.GetAxisRaw(GameConstants.VERTICAL) > 0)
-            {
-                playerOBJ.transform.Translate(Vector3.up * Time.deltaTime * speed);
-            }
-            if (Input.GetAxisRaw(GameConstants.VERTICAL) < 0)
-            {
-                playerOBJ.transform.Translate(Vector3.down * Time.deltaTime * speed);
-            }
-        }
-    }
+    //void FixedUpdate()
+    //{
+    //    // if ladder controls movement
+    //    if (canClimb && playerOBJ != null)
+    //    {
+    //        if (Input.GetAxisRaw(GameConstants.VERTICAL) > 0)
+    //        {
+    //            playerOBJ.transform.Translate(Vector3.up * Time.deltaTime * speed);
+    //        }
+    //        if (Input.GetAxisRaw(GameConstants.VERTICAL) < 0)
+    //        {
+    //            playerOBJ.transform.Translate(Vector3.down * Time.deltaTime * speed);
+    //        }
+    //    }
+    //}
 }
