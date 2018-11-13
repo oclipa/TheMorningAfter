@@ -180,45 +180,48 @@ public class PlayerController : MonoBehaviour, IPlayerDiedInvoker
 
     private void interactionEnter(GameObject collidedGameObject)
     {
-        //Debug.Log("Entered " + collidedGameObject.tag);
+        if (gameObject != null)
+        {
+            //Debug.Log("Entered " + collidedGameObject.tag);
 
-        // hit something, so can no longer be falling
-        this.maybeFalling = false;
+            // hit something, so can no longer be falling
+            this.maybeFalling = false;
 
-        this.isSolid = true;
+            this.isSolid = true;
 
-        // Did the player hit a platform?
-        if (collidedGameObject.CompareTag(GameConstants.PLATFORM))
-        {
-            // have we landed squarely on a platform?
-            checkGrounded(collidedGameObject);
-        }
-        // or a ramp?
-        else if (collidedGameObject.CompareTag(GameConstants.RAMP))
-        {
-            // have we landed squarely on a ramp?
-            checkGrounded(collidedGameObject);
-        }
-        // or a rope?
-        else if (collidedGameObject.CompareTag(GameConstants.ROPE_SECTION))
-        {
-            isOnRope = true;
-        }
-        // or a ladder?
-        else if (collidedGameObject.CompareTag(GameConstants.LADDER))
-        {
-            this.isOnLadder = true;
-        }
-        // or some scenery?
-        else if (collidedGameObject.CompareTag(GameConstants.SCENERY_OBSTACLE))
-        {
-            // have we landed squarely on the scenery obstacle?
-            checkGrounded(collidedGameObject);
-        }
-        // or an obstacle?
-        else if (collidedGameObject.CompareTag(GameConstants.OBSTACLE))
-        {
-            this.playerDiedEvent.Invoke(this.startPosition);
+            // Did the player hit a platform?
+            if (collidedGameObject.CompareTag(GameConstants.PLATFORM))
+            {
+                // have we landed squarely on a platform?
+                checkGrounded(collidedGameObject);
+            }
+            // or a ramp?
+            else if (collidedGameObject.CompareTag(GameConstants.RAMP))
+            {
+                // have we landed squarely on a ramp?
+                checkGrounded(collidedGameObject);
+            }
+            // or a rope?
+            else if (collidedGameObject.CompareTag(GameConstants.ROPE_SECTION))
+            {
+                isOnRope = true;
+            }
+            // or a ladder?
+            else if (collidedGameObject.CompareTag(GameConstants.LADDER))
+            {
+                this.isOnLadder = true;
+            }
+            // or some scenery?
+            else if (collidedGameObject.CompareTag(GameConstants.SCENERY_OBSTACLE))
+            {
+                // have we landed squarely on the scenery obstacle?
+                checkGrounded(collidedGameObject);
+            }
+            // or an obstacle?
+            else if (collidedGameObject.CompareTag(GameConstants.OBSTACLE))
+            {
+                this.playerDiedEvent.Invoke(this.startPosition);
+            }
         }
     }
 

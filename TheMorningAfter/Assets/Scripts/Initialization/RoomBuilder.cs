@@ -14,6 +14,12 @@ using UnityEngine.UI;
 /// </summary>
 public class RoomBuilder : MonoBehaviour {
 
+    //private const string START_ROOM = "TheBathroom";
+    //private static Vector3 START_POSITION = new Vector3(0.82f, -0.185f, 0);
+
+    private static string START_ROOM = "TheGarden";
+    private static Vector3 START_POSITION = new Vector3(-8.24f, 1.96f, 0);
+
     //float minPlatformY = -2.24f;
     //float maxPlatformY = 4.84f;
     //float minPlatformDepth = 0.32f;
@@ -41,8 +47,8 @@ public class RoomBuilder : MonoBehaviour {
         Blueprints.ResetRooms();
 
         // build the first room
-        currentRoom = Blueprints.GetRoom("TheBathroom");
-        BuildRoom(currentRoom, new Vector3(0.82f, -0.185f, 0)); // TheBathroom
+        currentRoom = Blueprints.GetRoom(START_ROOM);
+        BuildRoom(currentRoom, START_POSITION); // TheBathroom
         //BuildRoom(currentRoom, new Vector3(-8.5f, -2.0f, 0)); // TheLoft
         //BuildRoom(currentRoom, new Vector3(7.43f, 0f, 0)); // TheTreeTrunk
 

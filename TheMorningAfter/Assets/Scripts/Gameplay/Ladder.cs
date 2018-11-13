@@ -49,8 +49,14 @@ public class Ladder : MonoBehaviour
 
             // ensure that the player ignores any intersecting platforms
             foreach (GameObject platform in intersectingPlatforms)
-                Physics2D.IgnoreCollision(playerOBJ.GetComponent<Collider2D>(), 
-                                          platform.GetComponent<Collider2D>());
+            {
+                if (platform != null)
+                {
+                    Physics2D.IgnoreCollision(playerOBJ.GetComponent<Collider2D>(),
+                                              platform.GetComponent<Collider2D>());
+
+                }
+            }
         }
     }
 
