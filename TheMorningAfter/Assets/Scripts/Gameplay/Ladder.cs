@@ -71,7 +71,12 @@ public class Ladder : MonoBehaviour
         {
             // Ensure that player can interact with all platforms
             foreach (GameObject platform in intersectingPlatforms)
-                Physics2D.IgnoreCollision(playerOBJ.GetComponent<Collider2D>(), platform.GetComponent<Collider2D>(), false);
+            {
+                if (platform != null)
+                {
+                    Physics2D.IgnoreCollision(playerOBJ.GetComponent<Collider2D>(), platform.GetComponent<Collider2D>(), false);
+                }
+            }
 
             // ensure player is affected by gravity again
             playerOBJ.GetComponent<Rigidbody2D>().gravityScale = 1;

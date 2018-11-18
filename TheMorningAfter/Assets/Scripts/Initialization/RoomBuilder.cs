@@ -14,11 +14,11 @@ using UnityEngine.UI;
 /// </summary>
 public class RoomBuilder : MonoBehaviour {
 
-    //private const string START_ROOM = "TheBathroom";
-    //private static Vector3 START_POSITION = new Vector3(0.82f, -0.185f, 0);
+    private const string START_ROOM = "TheDrain"; //"TheBathroom";
+    private static Vector3 START_POSITION = new Vector3(0.82f, -0.185f, 0);
 
-    private static string START_ROOM = "TheGarden";
-    private static Vector3 START_POSITION = new Vector3(-8.24f, 1.96f, 0);
+    //private static string START_ROOM = "TheTreeBranch";
+    //private static Vector3 START_POSITION = new Vector3(-8.24f, 1.96f, 0);
 
     //float minPlatformY = -2.24f;
     //float maxPlatformY = 4.84f;
@@ -211,6 +211,7 @@ public class RoomBuilder : MonoBehaviour {
         float positionY = float.Parse(bits[2]);
         float width = float.Parse(bits[3]);
         float depth = float.Parse(bits[4]);
+        string brickType = bits[5];
 
         Vector3 position = new Vector3(positionX, positionY, 0);
         Vector2 size = new Vector2(width, depth);
@@ -226,6 +227,7 @@ public class RoomBuilder : MonoBehaviour {
 
         SpriteRenderer spriteRenderer = platform.GetComponent<SpriteRenderer>();
         spriteRenderer.size = size;
+        spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/" + brickType);
 
         BoxCollider2D boxCollider = platform.GetComponent<BoxCollider2D>();
         boxCollider.size = size;
@@ -237,6 +239,7 @@ public class RoomBuilder : MonoBehaviour {
         float positionY = float.Parse(bits[2]);
         float width = float.Parse(bits[3]);
         float depth = float.Parse(bits[4]);
+        string brickType = bits[5];
 
         Vector3 position = new Vector3(positionX, positionY, 0);
         Vector2 size = new Vector2(width, depth);
@@ -252,6 +255,7 @@ public class RoomBuilder : MonoBehaviour {
 
         SpriteRenderer spriteRenderer = platform.GetComponent<SpriteRenderer>();
         spriteRenderer.size = size;
+        spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/" + brickType);
 
         BoxCollider2D boxCollider = platform.GetComponent<BoxCollider2D>();
         boxCollider.size = size;
@@ -367,8 +371,9 @@ public class RoomBuilder : MonoBehaviour {
         string objectType = bits[0].ToUpper();
         float positionX = float.Parse(bits[1]);
         float positionY = float.Parse(bits[2]);
-        float width = float.Parse(bits[3]);
-        float length = float.Parse(bits[4]);
+        float rotation = float.Parse(bits[3]);
+        float width = float.Parse(bits[4]);
+        float length = float.Parse(bits[5]);
 
         Vector3 position = new Vector3(positionX, positionY, 0);
         Vector2 size = new Vector2(width, length);
@@ -381,6 +386,7 @@ public class RoomBuilder : MonoBehaviour {
 
         GameObject ramp = instantiateObject(objectType);
         ramp.transform.position = position;
+        ramp.transform.eulerAngles = new Vector3(0,0,rotation);
 
         SpriteRenderer spriteRenderer = ramp.GetComponent<SpriteRenderer>();
         spriteRenderer.size = size;
