@@ -14,7 +14,7 @@ using UnityEngine.UI;
 /// </summary>
 public class RoomBuilder : MonoBehaviour {
 
-    private const string START_ROOM = "TheEastRoof";
+    private const string START_ROOM = "TheBathroom";
     private static Vector3 START_POSITION = new Vector3(0.82f, -0.185f, 0);
 
     //private static string START_ROOM = "TheTreeBranch";
