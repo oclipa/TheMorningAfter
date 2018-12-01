@@ -15,7 +15,7 @@ using UnityEngine.UI;
 public class RoomBuilder : MonoBehaviour {
 
     private const string START_ROOM = "TheBathroom";
-    private static Vector3 START_POSITION = new Vector3(1.52f, -0.41f, 0);
+    private static Vector3 START_POSITION = new Vector3(0.82f, -0.185f, 0);
 
     //private static string START_ROOM = "TheTreeBranch";
     //private static Vector3 START_POSITION = new Vector3(-8.24f, 1.96f, 0);
@@ -207,10 +207,10 @@ public class RoomBuilder : MonoBehaviour {
 
     private void createPlatform(string[] bits)
     {
-        float positionX = float.Parse(bits[1]) * 2.28f;
-        float positionY = float.Parse(bits[2]) * 2.28f;
-        float width = float.Parse(bits[3]) * 2.25f;
-        float depth = float.Parse(bits[4]) * 3.125f;
+        float positionX = float.Parse(bits[1]);
+        float positionY = float.Parse(bits[2]);
+        float width = float.Parse(bits[3]);
+        float depth = float.Parse(bits[4]);
         string brickType = bits[5];
 
         Vector3 position = new Vector3(positionX, positionY, 0);
@@ -235,10 +235,10 @@ public class RoomBuilder : MonoBehaviour {
 
     private void createWall(string[] bits)
     {
-        float positionX = float.Parse(bits[1]) * 2.28f;
-        float positionY = float.Parse(bits[2]) * 2.28f;
-        float width = float.Parse(bits[3]) * 3.125f;
-        float depth = float.Parse(bits[4]) * 2.25f;
+        float positionX = float.Parse(bits[1]);
+        float positionY = float.Parse(bits[2]);
+        float width = float.Parse(bits[3]);
+        float depth = float.Parse(bits[4]);
         string brickType = bits[5];
 
         Vector3 position = new Vector3(positionX, positionY, 0);
@@ -264,10 +264,10 @@ public class RoomBuilder : MonoBehaviour {
     private void createMovingObstacle(string[] bits)
     {
         string objectType = bits[0].ToUpper();
-        float positionX = float.Parse(bits[1]) * 2.28f;
-        float positionY = float.Parse(bits[2]) * 2.28f;
-        float minConstraint = float.Parse(bits[3]) * 2.28f;
-        float maxConstraint = float.Parse(bits[4]) * 2.28f;
+        float positionX = float.Parse(bits[1]);
+        float positionY = float.Parse(bits[2]);
+        float minConstraint = float.Parse(bits[3]);
+        float maxConstraint = float.Parse(bits[4]);
         string direction = bits[5];
 
         Vector3 position = new Vector3(positionX, positionY, 0);

@@ -41,9 +41,6 @@ TagManager:
   - ResumeButton
   - BackButton
   - SceneryObstacle
-  - Undefined
-  - ScoreBoardTitlePanel
-  - ScoreBoardStatusPanel
   layers:
   - Default
   - TransparentFX

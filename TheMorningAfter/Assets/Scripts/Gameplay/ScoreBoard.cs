@@ -38,25 +38,19 @@ public class ScoreBoard : MonoBehaviour, IGameOverInvoker
     // Use this for initialization
     void Start()
     {
-        GameObject.FindGameObjectWithTag(GameConstants.SCOREBOARD).GetComponent<Canvas>().worldCamera = Camera.main;
-        GameObject statusPanel = GameObject.FindGameObjectWithTag(GameConstants.SCOREBOARDSTATUSPANEL);
-
         //livesRemainingText = GameObject.FindGameObjectWithTag("LivesRemainingText").GetComponent<Text>();
         livesRemaining = GameConstants.MaxLives;
         //livesRemainingText.text = createLivesRemainingText();
 
         livesSprites = new GameObject[GameConstants.MaxLives];
-        float lifeSpriteX = -18.5f;
+        float lifeSpriteX = -8.15f;
         for (int i = 0; i < GameConstants.MaxLives;i++)
         {
             GameObject lifeSprite = UnityEngine.Object.Instantiate(Resources.Load("Objects/LifeSprite")) as GameObject;
-            lifeSprite.transform.SetParent(statusPanel.transform);
-
-            Vector3 position = new Vector3(lifeSpriteX, -10f, 0f);
-            lifeSpriteX = lifeSpriteX + 1.5f;
+            Vector3 position = new Vector3(lifeSpriteX, -4.38f, 0f);
+            lifeSpriteX = lifeSpriteX + 0.70f;
             lifeSprite.transform.position = position;
             lifeSprite.GetComponent<SpriteRenderer>().color = HSBColor.ToColor(new HSBColor(0.333f, 1f, 1f));
-
             livesSprites[i] = lifeSprite;
         }
 
