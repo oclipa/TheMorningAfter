@@ -22,6 +22,8 @@ public static class GameConstants {
     public const string ROOMTITLECANVAS = "RoomTitleCanvas";
     public const string ROOMTITLETEXT = "RoomTitleText";
     public const string SCOREBOARD = "ScoreBoard";
+    public const string SCOREBOARDTITLEPANEL = "ScoreBoardTitlePanel";
+    public const string SCOREBOARDSTATUSPANEL = "ScoreBoardStatusPanel";
     public const string FINALSTATETEXT = "FinalStateText";
     public const string FINALSCORETEXT = "FinalScoreText";
     public const string ITEMSCOLLECTEDTEXT = "ItemsCollectedText";
