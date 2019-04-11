@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Does what it says on the tin: spawns a new player (at the specified position)
+/// </summary>
 public class PlayerSpawner : MonoBehaviour {
 
 	// Use this for initialization

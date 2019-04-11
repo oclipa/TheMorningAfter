@@ -6,11 +6,12 @@ public abstract class PlayerState {
 
     // This (and related classes) is based on the State pattern
 
-    // If we ever have to consider multi-threading, these should not be static
+    // TODO: These should probably be refactored to make them thread-safe
     public static StandingState STANDING = new StandingState();
     public static WalkingState WALKING = new WalkingState();
     public static JumpingState JUMPING = new JumpingState();
     public static ClimbingState CLIMBING = new ClimbingState();
+    public static FiringState FIRING = new FiringState();
     //public static SwingingState SWINGING = new SwingingState();
 
     // Update is called once per frame
@@ -18,9 +19,16 @@ public abstract class PlayerState {
     public abstract void UpdatePhysics(PlayerController playerController);
     public abstract void UpdateAnimation(PlayerController playerController);
 
+    /// <summary>
+    /// When walking up a slope, the player needs some help in order to allow
+    /// a smooth motion (so they don't get stuck on the slope).  This method 
+    /// applies a force opposite to the slope force.
+    /// </summary>
+    /// <param name="playerController">Player controller.</param>
+    /// <param name="slopeFriction">Slope friction.</param>
     protected void handleSlope(PlayerController playerController, float slopeFriction)
     {
-        if (playerController.CurrentSlopeNormalX != 0.0f)
+        if (playerController.CurrentSlopeNormalX != 0.0f && !playerController.IsOnLadder)
         {
             Vector2 playerVelocity = playerController.Rigidbody2D.velocity;
             Vector3 playerPosition = playerController.Transform.position;

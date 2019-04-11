@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Cycles the game title through a range of colours
+/// </summary>
 public class GameTitleFormatter : MonoBehaviour {
 
     Text gameTitleText;

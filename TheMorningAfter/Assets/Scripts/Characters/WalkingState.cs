@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// When the player is in this state, they are simply walking.
+/// jumping.
+/// </summary>
 public class WalkingState : MovingState
 {
     public override void UpdateInput(PlayerController playerController)
@@ -10,6 +14,8 @@ public class WalkingState : MovingState
 
         if (playerController.IsOnLadder)
         {
+            // if the player is touching a ladder, switch to the climbing
+            // state just in case the player wants to move up or down.
             playerController.PlayerState = PlayerState.CLIMBING;
         }
         else
@@ -23,15 +29,13 @@ public class WalkingState : MovingState
 
     public override void UpdatePhysics(PlayerController playerController)
     {
-        Transform transform = playerController.Transform;
-
         if (playerController.CurrentDirection == GameConstants.RIGHT)
         {
-            transform.Translate(Vector3.right * GameConstants.PLAYER_WALK_SPEED * Time.fixedDeltaTime);
+            moveRight(playerController);
         }
         else if (playerController.CurrentDirection == GameConstants.LEFT)
         {
-            transform.Translate(Vector3.left * GameConstants.PLAYER_WALK_SPEED * Time.fixedDeltaTime);
+            moveLeft(playerController);
         }
 
         // handle case where character is walking up or down a slope

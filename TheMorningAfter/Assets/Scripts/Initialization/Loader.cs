@@ -9,30 +9,33 @@ using UnityEngine.UI;
 
 public class Loader : MonoBehaviour {
 
-    const string CONFIG_FILES = "*.cfg";
-    const string INDEX_CFG = "Index.cfg";
+    const string CONFIG_FILES = "*.cfg"; // name format for config files
+    const string INDEX_CFG = "Index.cfg"; // the index file for all the room config files
 
-    Text loadingText;
+    Text loadingText; // text displayed during loading
 
-    bool isWebGl;
+    // location of config files is different if WebGl
+    bool isWebGl; 
     string assetPath;
 
-    bool readIndexFile;
-    bool allRoomsAdded;
-    bool loadConfigFailed;
-    int expectedRoomCount;
-    int actualRoomCount;
+    bool allRoomsAdded; // indicates when loading is finished
+    bool loadConfigFailed; // if a problem occured
+    int expectedRoomCount; // based on contents of index file
+    int actualRoomCount; // based on existing config files
 
     // Use this for initialization
     void Start () 
     {
-        AudioManager.Stop();
-        //AudioManager.Play(AudioClipName.Loading, true, 0.5f);
+        Logger.Log("LOADING");
+        AudioManager.Instance.Stop(); // stop all music
 
         loadingText = GameObject.FindGameObjectWithTag(GameConstants.LOADINGTEXT).GetComponent<Text>();
 
         assetPath = Application.streamingAssetsPath;
         isWebGl = assetPath.Contains("://") || assetPath.Contains(":///");
+
+        GameConstants.TotalTreasures = 0;
+        GameConstants.TotalCreatures = 0;
 
         try
         {
@@ -40,21 +43,23 @@ public class Loader : MonoBehaviour {
 
             if (isWebGl)
             {
-
-                // use intermediate loading scene?
+                // With WebGL, browser security prevents local files being read, so they 
+                // must be requested via an http request.  This means that that the config
+                // file access happens asynchronously, which means we need to use Coroutines to
+                // avoid hanging up the game.
                 StartCoroutine(SendRequest(Path.Combine(assetPath, INDEX_CFG), true));
             }
             else // desktop app
             {
                 displayMessage("Reading plans...");
 
-                DirectoryInfo d = new DirectoryInfo(assetPath);
-                FileInfo[] files = d.GetFiles(CONFIG_FILES); // Getting room config files
+                // read the index file to get the list of available rooms
+                List<FileInfo> files = readLocalIndexFile();
                 foreach (FileInfo file in files)
                 {
                     if (!file.Name.Equals(INDEX_CFG))
                     {
-                        Room room = new Room(file.Name);
+                        IRoom room = new Room(file.Name);
                         addRoom(room);
                     }
                 }
@@ -64,40 +69,60 @@ public class Loader : MonoBehaviour {
         } 
         catch // if all else fails, add default rooms only
         {
-            displayMessage("Failed to read stored plans; using default plans instead...");
-
-            loadDefaults();
+            displayMessage("Failed to read stored plans");
         }
     }
 
-    private void addRoom(Room room)
+    private List<FileInfo> readLocalIndexFile()
+    {
+        List<FileInfo> filteredEntries = new List<FileInfo>();
+
+        StreamReader streamReader = null;
+        try
+        {
+            streamReader = File.OpenText(Path.Combine(assetPath, INDEX_CFG));
+            string currentLine = streamReader.ReadLine();
+            while (currentLine != null)
+            {
+                // ignore blank lines and lines beginning with //
+                if (!string.IsNullOrEmpty(currentLine) && !currentLine.StartsWith("//", StringComparison.CurrentCulture))
+                {
+                    FileInfo fileInfo = new FileInfo(Path.Combine(assetPath, currentLine));
+                    // check if room config file exists
+                    if (fileInfo.Exists)
+                        filteredEntries.Add(fileInfo);
+                }
+
+                currentLine = streamReader.ReadLine();
+            }
+        }
+        catch (Exception x)
+        {
+            Debug.Log("Whoops: " + x.Message);
+            //SetDefaults(values);
+        }
+        finally
+        {
+            if (streamReader != null)
+                streamReader.Close();
+        }
+
+        return filteredEntries;
+    }
+
+    private void addRoom(IRoom room)
     {
         displayMessage("Located " + room.GetName());
         if (Blueprints.AddRoom(room))
+        {
             GameConstants.TotalTreasures += room.GetItemCount();
-    }
-
-    private void loadDefaults()
-    {
-        Blueprints.ClearAll();
-        GameConstants.TotalTreasures = 0;
-
-        TheBathroom room1 = new TheBathroom();
-        TheBedroom room2 = new TheBedroom();
-        TheLanding room3 = new TheLanding();
-        TheLoft room4 = new TheLoft();
-
-        addRoom(room1);
-        addRoom(room2);
-        addRoom(room3);
-        addRoom(room4);
-
-        finish();
+            GameConstants.TotalCreatures += room.GetCreatureCount();
+        }
     }
 
     private void displayMessage(string message)
     {
-        //AudioManager.PlayOneShot(AudioClipName.Click);
+        //AudioManager.Instance.PlayOneShot(AudioClipName.Click);
         loadingText.text = loadingText.text + Environment.NewLine + message;
     }
 
@@ -112,13 +137,13 @@ public class Loader : MonoBehaviour {
     {
         if (allRoomsAdded)
         {
+            //Debug.Log("Open Gameplay Scene");
             SceneManager.LoadScene("Gameplay");
         } 
         else if (isWebGl)
         {
             if (loadConfigFailed || expectedRoomCount < actualRoomCount)
             {
-                loadDefaults();
                 loadConfigFailed = false;
             }
             else if (expectedRoomCount > 0 && expectedRoomCount == actualRoomCount)
@@ -128,6 +153,12 @@ public class Loader : MonoBehaviour {
         }
 	}
 
+    /// <summary>
+    /// Get config from web server
+    /// </summary>
+    /// <returns>The request.</returns>
+    /// <param name="url">URL.</param>
+    /// <param name="readIndex">If set to <c>true</c> read index.</param>
     private IEnumerator SendRequest(string url, bool readIndex = false)
     {
         if (readIndex)
@@ -146,9 +177,11 @@ public class Loader : MonoBehaviour {
             {
                 try
                 {
+                    // get the file (could be index or room config)
                     string fileContents = request.downloadHandler.text;
-                    string[] entries = fileContents.Split('\n');
 
+                    // iterate over the contents of the file and extract each line
+                    string[] entries = fileContents.Split('\n');
                     List<string> filteredEntries = new List<string>();
                     for (int i = 0; i < entries.Length; i++)
                     {
@@ -161,19 +194,23 @@ public class Loader : MonoBehaviour {
                         }
                     }
 
+                    // The first time this is called, we will read the index file
                     if (readIndex)
                     {
                         expectedRoomCount = filteredEntries.Count;
                         displayMessage("House has " + expectedRoomCount + " rooms");
+
+                        // for each room listed in the index file, query the web server for
+                        // the correct config file
                         for (int i = 0; i < expectedRoomCount; i++)
                         {
                             //displayMessage("Reading room " + i);
                             StartCoroutine(SendRequest(Path.Combine(assetPath, filteredEntries[i])));
                         }
                     }
-                    else
+                    else // in subsequent calls we read the requested room config
                     {
-                        Room room = new Room(filteredEntries.ToArray());
+                        IRoom room = new Room(filteredEntries.ToArray());
                         addRoom(room);
                         actualRoomCount++;
                     }

@@ -5,13 +5,38 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Event manager.
+/// Event manager.  
+/// 
+/// This is good enough for this small game, however
+/// for more complex games, or ones where multi-threading becomes
+/// important, having a single static class handling all events 
+/// may (will) be a problem.
+/// 
+/// It would be more scaleable to implement events using native .NET 
+/// EventHandlers or Actions.
+/// 
+/// As a side-note, the following is an excellent blog post discussing
+/// the pros and cons of EventHandlers vs Actions: 
+/// http://www.paulrohde.com/events-eventhandler-or-action/
+/// 
+/// 
+/// Note that the only real advantage of using UnityAction (or UnityEvent)
+/// is that they can be serialized by the Unity Inspector, so you can
+/// assign the object and method to notify via drag and drop.
 /// </summary>
 public static class EventManager
 {
     // The ItemController notifies listeners when an item is collected.
     static List<ItemController> itemCollectedInvokers = new List<ItemController>();
     static List<UnityAction<string>> itemCollectedListeners = new List<UnityAction<string>>();
+
+    // The ObstacleController notifies listeners when a creature is killed.
+    static List<ObstacleController> creatureKilledInvokers = new List<ObstacleController>();
+    static List<UnityAction<string>> creatureKilledListeners = new List<UnityAction<string>>();
+
+    // The ItemController notifies listeners when a power up has been obtained.
+    static List<ItemController> powerUpInvokers = new List<ItemController>();
+    static List<UnityAction<string>> powerUpListeners = new List<UnityAction<string>>();
 
     // The PlayerController notifies listeners when the player dies.
     static List<IPlayerDiedInvoker> playerDiedInvokers = new List<IPlayerDiedInvoker>();
@@ -26,7 +51,7 @@ public static class EventManager
     // the rooms (which means they have moved to the next room).
     // The event includes the new room id.
     static List<Door> nextRoomInvokers = new List<Door>();
-    static List<UnityAction<string, string>> nextRoomListeners = new List<UnityAction<string, string>>();
+    static List<UnityAction<string, string, bool>> nextRoomListeners = new List<UnityAction<string, string, bool>>();
 
 
     #region ItemCollected
@@ -49,6 +74,54 @@ public static class EventManager
         // ensure that this new listener is added to all existing new invokers
         foreach (ItemController invoker in itemCollectedInvokers)
             invoker.AddItemCollectedListener(itemCollectedListener);
+    }
+
+    #endregion
+
+    #region CreatureKilled
+
+    public static void AddCreatureKilledInvoker(ObstacleController creatureKilledInvoker)
+    {
+        // add the new invoker to the list of invokers
+        creatureKilledInvokers.Add(creatureKilledInvoker);
+
+        // ensure that all existing listeners are added to this new invoker
+        foreach (UnityAction<string> listener in creatureKilledListeners)
+            creatureKilledInvoker.AddCreatureKilledListener(listener);
+    }
+
+    public static void AddCreatureKilledListener(UnityAction<string> creatureKilledListener)
+    {
+        // add the new listener to the list of listeners
+        creatureKilledListeners.Add(creatureKilledListener);
+
+        // ensure that this new listener is added to all existing new invokers
+        foreach (ObstacleController invoker in creatureKilledInvokers)
+            invoker.AddCreatureKilledListener(creatureKilledListener);
+    }
+
+    #endregion
+
+    #region PowerUp
+
+    public static void AddPowerUpInvoker(ItemController powerUpInvoker)
+    {
+        // add the new invoker to the list of invokers
+        powerUpInvokers.Add(powerUpInvoker);
+
+        // ensure that all existing listeners are added to this new invoker
+        foreach (UnityAction<string> listener in powerUpListeners)
+            powerUpInvoker.AddPowerUpListener(listener);
+    }
+
+    public static void AddPowerUpListener(UnityAction<string> powerUpListener)
+    {
+        // add the new listener to the list of listeners
+        powerUpListeners.Add(powerUpListener);
+
+        // ensure that this new listener is added to all existing new invokers
+        foreach (ItemController invoker in powerUpInvokers)
+            invoker.AddPowerUpListener(powerUpListener);
     }
 
     #endregion
@@ -109,11 +182,11 @@ public static class EventManager
         nextRoomInvokers.Add(nextRoomInvoker);
 
         // ensure that all existing listeners are added to this new invoker
-        foreach (UnityAction<string, string> listener in nextRoomListeners)
+        foreach (UnityAction<string, string, bool> listener in nextRoomListeners)
             nextRoomInvoker.AddNextRoomListener(listener);
     }
 
-    public static void AddNextRoomListener(UnityAction<string, string> nextRoomListener)
+    public static void AddNextRoomListener(UnityAction<string, string, bool> nextRoomListener)
     {
         // add the new listener to the list of listeners
         nextRoomListeners.Add(nextRoomListener);

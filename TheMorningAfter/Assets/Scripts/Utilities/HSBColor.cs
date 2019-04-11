@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Provides a Hue/Saturation/Brightness/Alpha color model in addition to 
+/// Unity's built in Red/Green/Blue/Alpha colors. It is useful for 
+/// interpolating between colors in a more pleasing fashion.
+/// 
+/// From: http://wiki.unity3d.com/index.php/HSBColor
+/// </summary>
 [System.Serializable]
 public struct HSBColor
 {
@@ -202,23 +209,23 @@ public struct HSBColor
         HSBColor color;
 
         color = new HSBColor(Color.red);
-        Debug.Log("red: " + color);
+        Logger.Log("red: " + color);
 
         color = new HSBColor(Color.green);
-        Debug.Log("green: " + color);
+        Logger.Log("green: " + color);
 
         color = new HSBColor(Color.blue);
-        Debug.Log("blue: " + color);
+        Logger.Log("blue: " + color);
 
         color = new HSBColor(Color.grey);
-        Debug.Log("grey: " + color);
+        Logger.Log("grey: " + color);
 
         color = new HSBColor(Color.white);
-        Debug.Log("white: " + color);
+        Logger.Log("white: " + color);
 
         color = new HSBColor(new Color(0.4f, 1f, 0.84f, 1f));
-        Debug.Log("0.4, 1f, 0.84: " + color);
+        Logger.Log("0.4, 1f, 0.84: " + color);
 
-        Debug.Log("164,82,84   .... 0.643137f, 0.321568f, 0.329411f  :" + ToColor(new HSBColor(new Color(0.643137f, 0.321568f, 0.329411f))));
+        Logger.Log("164,82,84   .... 0.643137f, 0.321568f, 0.329411f  :" + ToColor(new HSBColor(new Color(0.643137f, 0.321568f, 0.329411f))));
     }
 }

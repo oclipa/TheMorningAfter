@@ -2,14 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Watches for the player to issue a pause command
+/// </summary>
 public class PauseWatcher : MonoBehaviour {
 
-    bool isPaused;
+    private CommandHandler commandHandler;
+    private bool isPaused;
 
-	// Update is called once per frame
-	void Update () 
+    private void Start()
     {
-        if (!isPaused && Input.GetKeyDown(KeyCode.Escape))
+        this.commandHandler = new KeyboardCommandHandler();
+    }
+
+    // Update is called once per frame
+    void Update () 
+    {
+        if (!isPaused && this.commandHandler.IsEscapeSelected())
         {
             isPaused = true;
             MenuManager.GoToMenu(MenuName.Pause);

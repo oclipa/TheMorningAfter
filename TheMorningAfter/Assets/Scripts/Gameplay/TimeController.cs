@@ -5,15 +5,20 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the in-game time
+/// 
+/// The original intention was that there would be time-based easter eggs,
+/// but this was never implemented.
+/// </summary>
 public class TimeController : MonoBehaviour {
 
     Text timeText;
-    DateTime time;
+    DateTime time = GameConstants.DEFAULT_TIME;
 
 	// Use this for initialization
 	void Start () {
         timeText = gameObject.GetComponent<Text>();
-        time = new DateTime(2018, 1, 1, 7, 30, 0);
 	}
 
     private void FixedUpdate()
@@ -29,5 +34,6 @@ public class TimeController : MonoBehaviour {
     public DateTime CurrentTime
     {
         get { return this.time; }
+        set { this.time = value; }
     }
 }

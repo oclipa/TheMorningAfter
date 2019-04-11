@@ -41,6 +41,24 @@ TagManager:
   - ResumeButton
   - BackButton
   - SceneryObstacle
+  - PowerUp
+  - MissingRoomMessage
+  - MissingRoomMessageButton
+  - CreditsMenu
+  - MessageText
+  - TheWeapon
+  - LaserTarget
+  - Laser
+  - MusicToggle
+  - EffectsToggle
+  - LoadButton
+  - Maid
+  - SettingsButton
+  - CreditsButton
+  - EasyButton
+  - MediumButton
+  - HardButton
+  - Background
   layers:
   - Default
   - TransparentFX
@@ -52,7 +70,7 @@ TagManager:
   - 
   - Ladder
   - Obstacle
-  - 
+  - Structural
   - 
   - 
   - 
@@ -78,12 +96,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Platform
-    uniqueID: 1561624575
-    locked: 0
   - name: Wall
     uniqueID: 520181411
     locked: 0
+  - name: Platform
+    uniqueID: 1561624575
+    locked: 0
   - name: Ladder
     uniqueID: 1673058347
+    locked: 0
+  - name: Player
+    uniqueID: 2592629063
+    locked: 0
+  - name: ScoreBoard
+    uniqueID: 1952015111
     locked: 0

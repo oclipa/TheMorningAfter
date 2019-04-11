@@ -1,0 +1,14 @@
+TITLE: My first game is released! Let me know what you think...
+
+Fellow redditors, I recently released my first game "The Morning After". It's an homage to the games of the 80's (the more seasoned of you may well recognize the unsubtle nods in that direction).
+
+While not necessarily a giant leap forward in 2D platformers, it is certainly a significant leap forward for me.
+
+As is traditional, I now bare my breast to you and ask for feedback; stab away (or, you know, caress gently if you prefer).
+
+The WebGL release of the game can be found here https://oclipa.itch.io/the-morning-after
+
+Thanks for your time!
+
+
+BTW, although I am sure that none of you fine redditors would be swayed by cheap bribes, if you know anyone who is, there is Reddit Platinum on offer for the first person to complete the "hard" difficulty level.  Reply to this post with a screenshot of the final end screen of the game (showing the final score) as proof of completion.  I also have some Gold coins available for the first people to complete the "easy" and "medium" levels (again, reply with a screenshot).

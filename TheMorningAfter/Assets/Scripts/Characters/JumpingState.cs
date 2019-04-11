@@ -2,32 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// When the player is in this state, they are in the process of
+/// jumping.
+/// </summary>
 public class JumpingState : MovingState
 {
     public override void UpdatePhysics(PlayerController playerController)
     {
-        Transform transform = playerController.Transform;
-        Rigidbody2D rigidbody2D = playerController.Rigidbody2D;
-
-        if (playerController.CurrentDirection == GameConstants.RIGHT)
+        // avoid double-jumping
+        if (playerController.IsGrounded)
         {
-            transform.Translate(Vector3.right * GameConstants.PLAYER_WALK_SPEED * Time.fixedDeltaTime);
-            rigidbody2D.AddForce(new Vector2(GameConstants.PLAYER_JUMP_SPEED_X, GameConstants.PLAYER_JUMP_SPEED_Y));
+            playerController.IsGrounded = false;
 
-            playerController.PlayerState = PlayerState.WALKING;
-        }
-        else if (playerController.CurrentDirection == GameConstants.LEFT)
-        {
-            transform.Translate(Vector3.left * GameConstants.PLAYER_WALK_SPEED * Time.fixedDeltaTime);
-            rigidbody2D.AddForce(new Vector2(-1 * GameConstants.PLAYER_JUMP_SPEED_X, GameConstants.PLAYER_JUMP_SPEED_Y));
+            AudioManager.Instance.PlayOneShot(AudioClipName.Jump);
 
-            playerController.PlayerState = PlayerState.WALKING;
-        }
-        else if (playerController.CurrentDirection == GameConstants.STATIONARY)
-        {
-            rigidbody2D.AddForce(new Vector2(0, GameConstants.PLAYER_JUMP_SPEED_Y));
+            // after jumping, the player will enter another state
+            if (playerController.CurrentDirection == GameConstants.RIGHT)
+            {
+                jumpRight(playerController);
 
-            playerController.PlayerState = PlayerState.STANDING;
+                playerController.PlayerState = PlayerState.WALKING;
+            }
+            else if (playerController.CurrentDirection == GameConstants.LEFT)
+            {
+                jumpLeft(playerController);
+
+                playerController.PlayerState = PlayerState.WALKING;
+            }
+            else if (playerController.CurrentDirection == GameConstants.STATIONARY)
+            {
+                jumpUp(playerController);
+
+                playerController.PlayerState = PlayerState.STANDING;
+            }
         }
     }
 }

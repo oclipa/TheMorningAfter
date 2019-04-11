@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Details all rooms in the house
+/// Details all rooms in the house.
+/// 
+/// This is not thread-safe, but for the purposes of this small game, 
+/// this is good enough.
 /// </summary>
 public static class Blueprints {
 
@@ -23,6 +26,7 @@ public static class Blueprints {
     /// <param name="room">Room.</param>
     public static bool AddRoom(IRoom room)
     {
+        // don't want to add a room twice
         if (!rooms.ContainsKey(room.GetID()))
         {
             rooms.Add(room.GetID(), room);
@@ -41,7 +45,9 @@ public static class Blueprints {
     {
         IRoom room = null;
         if (rooms.TryGetValue(roomID, out room))
+        {
             return room;
+        }
 
         return null;
     }
@@ -55,11 +61,15 @@ public static class Blueprints {
         return new List<string>(rooms.Keys);
     }
 
-    public static void ResetRooms()
+    /// <summary>
+    /// Resets all rooms to their previously saved state
+    /// </summary>
+    /// <param name="gameState">Game state.</param>
+    public static void ResetRooms(GameState gameState = null)
     {
         foreach(KeyValuePair<string, IRoom> kvp in rooms)
         {
-            kvp.Value.Reset();
+            kvp.Value.Reset(gameState);
         }
     }
 }

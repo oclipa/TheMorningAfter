@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// When the player is in this state, they are simply standing still.
+/// jumping.
+/// </summary>
 public class StandingState : PlayerState 
 {
     public override void UpdateInput(PlayerController playerController)

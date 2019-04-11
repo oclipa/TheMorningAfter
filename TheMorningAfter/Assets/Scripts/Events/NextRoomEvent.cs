@@ -6,7 +6,7 @@ using UnityEngine.Events;
 /// <summary>
 /// Next room event.
 /// </summary>
-public class NextRoomEvent : UnityEvent<string, string>
+public class NextRoomEvent : UnityEvent<string, string, bool>
 {
 
 }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Interface to be implemented by anything that wants to notify that the player died
+/// </summary>
 public interface IPlayerDiedInvoker {
 
     /// <summary>

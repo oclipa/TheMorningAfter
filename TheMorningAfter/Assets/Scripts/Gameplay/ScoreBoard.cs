@@ -6,116 +6,110 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class ScoreBoard : MonoBehaviour, IGameOverInvoker
+/// <summary>
+/// Displays the game state in a user-readable form
+/// </summary>
+public class ScoreBoard : MonoBehaviour
 {
-    //private Text livesRemainingText;
-    private int livesRemaining;
-    private GameObject[] livesSprites;
+    private int livesRemaining; // number of lives remaining
+    private GameObject[] livesSprites; // used to indicate number of lives remaining
 
-    private Text itemsCollectedText;
-    private int itemsCollected;
+    private int itemsCollected; // number of items collected
+    private Text itemsCollectedText; // used to indicate the number of items collected
+    private Text messageText; // used to indicate the name of the last item collected
+    private bool showMessage; // indicates whether the name of the last item collected should be displayed
 
-    private bool gameOver;
-
-    private GameOverEvent gameOverEvent;
-
-    private bool mariaGivenInstructions;
-    private bool mariaGivenWarning;
-    private bool bedReached;
-
-    private bool died;
-    private Image blankScreen;
-    private bool isBlank;
-    Timer deathTimer;
-    Vector3 rebirthPosition;
-
-    private void Awake()
-    {
-        deathTimer = gameObject.AddComponent<Timer>();
-        deathTimer.Duration = 0.5f;;
-    }
+    GameState gameState; // the state of the game
 
     // Use this for initialization
     void Start()
     {
-        //livesRemainingText = GameObject.FindGameObjectWithTag("LivesRemainingText").GetComponent<Text>();
-        livesRemaining = GameConstants.MaxLives;
-        //livesRemainingText.text = createLivesRemainingText();
+        // ensure that the canvas is being displayed on the main camera
+        GetComponent<Canvas>().worldCamera = Camera.main;
 
-        livesSprites = new GameObject[GameConstants.MaxLives];
-        float lifeSpriteX = -8.15f;
-        for (int i = 0; i < GameConstants.MaxLives;i++)
+        gameState = Camera.main.GetComponent<GameState>();
+
+        // display a sprite for each remaining life
+        UpdateLifeSprites(GameConstants.MaxLives);
+
+        EventManager.AddPowerUpListener(CollectItem);
+        EventManager.AddItemCollectedListener(CollectItem);
+
+        itemsCollectedText = GameObject.FindGameObjectWithTag(GameConstants.ITEMSCOLLECTEDTEXT).GetComponent<Text>();
+        itemsCollectedText.text = createItemsCollectedText();
+
+        messageText = GameObject.FindGameObjectWithTag(GameConstants.MESSAGETEXT).GetComponent<Text>();
+        messageText.enabled = false;
+        showMessage = false;
+
+        Logger.Log("Time = " + gameState.InGameTime.ToShortTimeString());
+        GameObject.FindGameObjectWithTag(GameConstants.TIMETEXT).GetComponent<TimeController>().CurrentTime = gameState.InGameTime;
+    }
+
+    private void Update()
+    {
+        // if the number of items collected has changed, update the display
+        if (this.itemsCollected != gameState.ItemsCollected)
+        {
+            this.itemsCollected = gameState.ItemsCollected;
+            itemsCollectedText.text = createItemsCollectedText();
+        }
+
+        // if the number of lives remaining has changed, update the display
+        if (this.livesRemaining != gameState.LivesRemaining)
+        {
+            this.livesRemaining = gameState.LivesRemaining;
+            Logger.Log("UPDATE LIVES DISPLAY:" + this.livesRemaining);
+
+            // destroy current life sprites
+            if (livesSprites != null && livesSprites.Length > 0)
+            {
+                for(int i = 0; i < livesSprites.Length; i++)
+                {
+                    Destroy(livesSprites[i]);
+                }
+            }
+
+            // create new life sprites
+            if (livesRemaining > 0)
+                UpdateLifeSprites(this.livesRemaining);
+        }
+
+        // if the name of the most recent item collected is being shown
+        if (showMessage)
+        {
+            // slowly reduce the transparancy of the text so that 
+            // it gradually disappears.
+            Color color = messageText.color;
+            if (color.a > 0f)
+            {
+                color.a -= 0.001f; // bigger number; quicker disappearance
+                messageText.color = color;
+
+                if (color.a <= 0f)
+                {
+                    messageText.enabled = false;
+                    showMessage = false;
+                }
+            }
+        }
+    }
+
+    private void UpdateLifeSprites(int remainingLives)
+    {
+        // display a sprite for each remaining life
+        livesSprites = new GameObject[remainingLives];
+        float lifeSpriteX = -8.15f; // x position on camera
+        for (int i = 0; i < remainingLives; i++)
         {
             GameObject lifeSprite = UnityEngine.Object.Instantiate(Resources.Load("Objects/LifeSprite")) as GameObject;
+
+            // set sprite position
             Vector3 position = new Vector3(lifeSpriteX, -4.38f, 0f);
             lifeSpriteX = lifeSpriteX + 0.70f;
             lifeSprite.transform.position = position;
-            lifeSprite.GetComponent<SpriteRenderer>().color = HSBColor.ToColor(new HSBColor(0.333f, 1f, 1f));
+
             livesSprites[i] = lifeSprite;
-        }
-
-        itemsCollectedText = GameObject.FindGameObjectWithTag(GameConstants.ITEMSCOLLECTEDTEXT).GetComponent<Text>();
-        itemsCollected = 0;
-        itemsCollectedText.text = createItemsCollectedText();
-
-        blankScreen = GameObject.FindGameObjectWithTag(GameConstants.BLANKSCREENBACKGROUND).GetComponent<Image>();
-
-        EventManager.AddItemCollectedListener(AddItem);
-        EventManager.AddPlayerDiedListener(SubtractLife);
-
-        gameOverEvent = new GameOverEvent();
-        EventManager.AddGameOverInvoker(this);
-
-        Color color = blankScreen.color;
-        color.a = 0f;
-        blankScreen.color = color;
-
-    }
-
-    private void FixedUpdate()
-    {
-        if (died)
-        {
-            if (!isBlank)
-            {
-                deathTimer.Run();
-                Color color = blankScreen.color;
-                color.a = 255f;
-                blankScreen.color = color;
-                isBlank = true;
-            }
-
-            if (deathTimer.Finished)
-            {
-                died = false;
-                Color color = blankScreen.color;
-                color.a = 0f;
-                blankScreen.color = color;
-                isBlank = false;
-                PlayerSpawner.SpawnNewPlayer(rebirthPosition);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Adds the games over listener.
-    /// </summary>
-    /// <param name="listener">Listener.</param>
-    public void AddGameOverListener(UnityAction<int> listener)
-    {
-        gameOverEvent.AddListener(listener);
-    }
-
-    /// <summary>
-    /// Adds an item to the current score
-    /// </summary>
-    public void AddItem(string itemId)
-    {
-        //Debug.Log("Item Added: " + itemId);
-        if (itemsCollectedText != null) // prevent access of destroyed Text object
-        {
-            itemsCollected++;
-            itemsCollectedText.text = createItemsCollectedText();
         }
     }
 
@@ -124,94 +118,25 @@ public class ScoreBoard : MonoBehaviour, IGameOverInvoker
         return "Items Collected: " + itemsCollected + " of " + GameConstants.TotalTreasures;
     }
 
-
-    private string createLivesRemainingText()
+    /// <summary>
+    /// Player has collected an item, which invalidates the previous room state
+    /// </summary>
+    /// <param name="itemID">Item identifier.</param>
+    public void CollectItem(string itemID)
     {
-        return "Lives Remaining: " + livesRemaining;
+        this.showMessage = true;
+        this.messageText.text = "You Got " + SplitCamelCase(itemID);
+        this.messageText.color = Color.white;
+        this.messageText.enabled = true;
     }
 
     /// <summary>
-    /// Reduce the number of remaining lives
+    /// Converts item ids into a more user-readable form
     /// </summary>
-    /// <param name="startPosition">The start position.</param>
-    public void SubtractLife(Vector3 startPosition)
+    /// <returns>The camel case.</returns>
+    /// <param name="input">Input.</param>
+    public static string SplitCamelCase(string input)
     {
-        if (!gameOver)
-        {
-            died = true;
-            rebirthPosition = startPosition;
-
-            killPlayer();
-
-            livesRemaining--;
-            livesSprites[livesRemaining].SetActive(false);
-
-            //if (livesRemainingText != null) // prevent access of destroyed Text object
-            //{
-            //    livesRemaining--;
-            //    livesRemainingText.text = createLivesRemainingText();
-            //}
-
-            if (livesRemaining <= 0)
-            {
-                gameOverEvent.Invoke(itemsCollected);
-                gameOver = true;
-            }
-        }
-    }
-
-    private static void killPlayer()
-    {
-        AudioManager.PlayOneShot(AudioClipName.Died);
-
-        GameObject player = GameObject.FindGameObjectWithTag(GameConstants.PLAYER);
-
-        Animator animator = player.GetComponent<Animator>();
-        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-
-        animator.speed = 0;
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0;
-
-        Destroy(player);
-    }
-
-    /// <summary>
-    /// Gets the items collected.
-    /// </summary>
-    /// <value>The items collected.</value>
-    public int ItemsCollected
-    {
-        get { return this.itemsCollected; }
-    }
-
-    /// <summary>
-    /// Indicates whether Maria has given the basic instructions
-    /// </summary>
-    /// <value><c>true</c> if has maria given instructions; otherwise, <c>false</c>.</value>
-    public bool HasMariaGivenInstructions
-    {
-        get { return this.mariaGivenInstructions; }
-        set { this.mariaGivenInstructions = value; }
-    }
-
-    /// <summary>
-    /// Indicates whether Maria has given a warning
-    /// </summary>
-    /// <value><c>true</c> if has maria given warning; otherwise, <c>false</c>.</value>
-    public bool HasMariaGivenWarning
-    {
-        get { return this.mariaGivenWarning; }
-        set { this.mariaGivenWarning = value; }
-    }
-
-    /// <summary>
-    /// Has the bed been reached (i.e. successful game over)
-    /// </summary>
-    /// <value><c>true</c> if bed reached; otherwise, <c>false</c>.</value>
-    public bool BedReached
-    {
-        get { return this.bedReached; }
-        set { this.bedReached = value; }
+        return System.Text.RegularExpressions.Regex.Replace(input, "([A-Z])", " $1").Trim();
     }
 }

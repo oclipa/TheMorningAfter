@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Watches for Game Over and reacts accordingly
+/// </summary>
 public class GameOverWatcher : MonoBehaviour
 {
 

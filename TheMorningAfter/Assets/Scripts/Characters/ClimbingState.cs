@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// When the player is in this state, the controls allow them to move
+/// as if climbing.
+/// </summary>
 public class ClimbingState : MovingState
 {
     public override void UpdateInput(PlayerController playerController)
@@ -14,23 +18,26 @@ public class ClimbingState : MovingState
 
     public override void UpdatePhysics(PlayerController playerController)
     {
-        Transform transform = playerController.Transform;
-
         if (playerController.CurrentDirection == GameConstants.RIGHT)
         {
-            transform.Translate(Vector3.right * GameConstants.PLAYER_WALK_SPEED * Time.fixedDeltaTime);
+            moveRight(playerController);
         }
         else if (playerController.CurrentDirection == GameConstants.LEFT)
         {
-            transform.Translate(Vector3.left * GameConstants.PLAYER_WALK_SPEED * Time.fixedDeltaTime);
+            moveLeft(playerController);
         }
         else if (playerController.CurrentDirection == GameConstants.UP)
         {
-            transform.Translate(Vector3.up * GameConstants.PLAYER_CLIMB_SPEED * Time.fixedDeltaTime);
+            moveUp(playerController);
         }
         else if (playerController.CurrentDirection == GameConstants.DOWN)
         {
-            transform.Translate(Vector3.down * GameConstants.PLAYER_CLIMB_SPEED * Time.fixedDeltaTime);
+            moveDown(playerController);
         }
+    }
+
+    public override void UpdateAnimation(PlayerController playerController)
+    {
+        changeAnimationState(playerController, GameConstants.ANIMATION_CLIMB);
     }
 }
