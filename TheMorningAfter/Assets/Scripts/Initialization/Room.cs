@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Room : IRoom {
 
@@ -29,12 +30,17 @@ public class Room : IRoom {
     protected List<string> remainingCreatures = new List<string>(); // the list of creatures that remain in the room
     protected List<string> killedCreatures = new List<string>(); // the list of creatures that have been killed in the room
 
+    protected bool visited;
+
     // physics overrides
     protected float creatureSpeedMultiplier = 1.0f;
     protected float playerSpeedMultiplier = 1.0f;
     protected float gravityXMultiplier = 1.0f;
     protected float gravityYMultiplier = 1.0f;
     protected PlayerControlBehavior playerControlBehavior = PlayerControlBehavior.NORMAL;
+
+    RoomVisitedEvent roomVisitedEvent; // triggered when the room is visited
+
 
     #region Construct Room
 
@@ -43,6 +49,8 @@ public class Room : IRoom {
         EventManager.AddItemCollectedListener(CollectItem);
         EventManager.AddPowerUpListener(CollectItem);
         EventManager.AddCreatureKilledListener(KillCreature);
+
+        this.roomVisitedEvent = new RoomVisitedEvent();
     }
 
     /// <summary>
@@ -210,6 +218,9 @@ public class Room : IRoom {
                     this.killedCreatures.Add(killedCreature);
                 }
             }
+
+            // has the player already visited this room?
+            visited = gameState.GetVisitedStatus(this.GetID());
         }
         else // no saved state
         {
@@ -227,6 +238,9 @@ public class Room : IRoom {
 
             // reset list of killed creatures
             this.killedCreatures.Clear();
+
+            // reset visited state
+            this.visited = false;
         }
     }
 
@@ -542,6 +556,28 @@ public class Room : IRoom {
     { 
         get { return this.playerControlBehavior; }
         set { this.playerControlBehavior = value; }
+    }
+
+    /// <summary>
+    /// Has the player visited the room?
+    /// </summary>
+    public bool Visited
+    {
+        get { return this.visited; }
+        set
+        {
+            this.visited = value;
+            roomVisitedEvent.Invoke(this);
+        }
+    }
+
+    /// <summary>
+    /// Adds the room visited listener.
+    /// </summary>
+    /// <param name="listener">Listener.</param>
+    public void AddRoomVisitedListener(UnityAction<IRoom> listener)
+    {
+        roomVisitedEvent.AddListener(listener);
     }
 
     #endregion

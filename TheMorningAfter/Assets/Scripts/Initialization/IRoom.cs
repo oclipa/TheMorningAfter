@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Original idea was that it might be worth differentiating between
@@ -148,6 +149,17 @@ public interface IRoom {
     /// </summary>
     /// <value>The player control behaviour.</value>
     PlayerControlBehavior PlayerControlBehavior { get; set; }
+
+    /// <summary>
+    /// Has the player visited the room?
+    /// </summary>
+    bool Visited { get; set; }
+
+    /// <summary>
+    /// Adds the room visited listener.
+    /// </summary>
+    /// <param name="listener">Listener.</param>
+    void AddRoomVisitedListener(UnityAction<IRoom> listener);
 }
 
 

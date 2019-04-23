@@ -53,6 +53,11 @@ public static class EventManager
     static List<Door> nextRoomInvokers = new List<Door>();
     static List<UnityAction<string, string, bool>> nextRoomListeners = new List<UnityAction<string, string, bool>>();
 
+    // Rooms notify when they are visited
+    // The event includes the room.
+    static List<IRoom> roomVisitedInvokers = new List<IRoom>();
+    static List<UnityAction<IRoom>> roomVisitedListeners = new List<UnityAction<IRoom>>();
+
 
     #region ItemCollected
 
@@ -194,6 +199,30 @@ public static class EventManager
         // ensure that this new listener is added to all existing new invokers
         foreach (Door invoker in nextRoomInvokers)
             invoker.AddNextRoomListener(nextRoomListener);
+    }
+
+    #endregion
+
+    #region RoomVisited
+
+    public static void AddRoomVisitedInvoker(IRoom roomVisitedInvoker)
+    {
+        // add the new invoker to the list of invokers
+        roomVisitedInvokers.Add(roomVisitedInvoker);
+
+        // ensure that all existing listeners are added to this new invoker
+        foreach (UnityAction<IRoom> listener in roomVisitedListeners)
+            roomVisitedInvoker.AddRoomVisitedListener(listener);
+    }
+
+    public static void AddRoomVisitedListener(UnityAction<IRoom> roomVisitedListener)
+    {
+        // add the new listener to the list of listeners
+        roomVisitedListeners.Add(roomVisitedListener);
+
+        // ensure that this new listener is added to all existing new invokers
+        foreach (IRoom invoker in roomVisitedInvokers)
+            invoker.AddRoomVisitedListener(roomVisitedListener);
     }
 
     #endregion

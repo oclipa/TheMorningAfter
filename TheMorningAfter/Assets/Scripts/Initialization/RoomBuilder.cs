@@ -60,6 +60,9 @@ public class RoomBuilder : MonoBehaviour, IGameOverInvoker {
                 currentRoom = Blueprints.GetRoom(START_ROOM);
             }
 
+            if (currentRoom != null)
+                currentRoom.Visited = true;
+
             // build the first room
             BuildRoom(currentRoom, startPosition);
 
@@ -92,6 +95,8 @@ public class RoomBuilder : MonoBehaviour, IGameOverInvoker {
         {
             constructNewRoom = false;
 
+            this.currentRoom.Visited = true;
+
             // now create the scoreboard
             ConstructScoreBoard();
 
@@ -100,6 +105,8 @@ public class RoomBuilder : MonoBehaviour, IGameOverInvoker {
 
             // spawn the player at the correct state position
             PlayerSpawner.SpawnNewPlayer(this.nextStartPosition);
+
+            UnityEngine.Object.Instantiate(Resources.Load("ScoreBoard/MapCanvas"));
 
             // start the background music
             PlayMusic();
@@ -162,6 +169,8 @@ public class RoomBuilder : MonoBehaviour, IGameOverInvoker {
 
             Logger.Log("ENTERING " + nextRoom + " FROM " + prevRoom);
 
+            room.Visited = true;
+
             gameState.CurrentRoom = room.GetID();
             gameState.CurrentPosition = startPosition;
             Logger.Log("SAVING STATE: " + gameState.Dump(), LogType.TO_DEBUG_ONLY);
@@ -208,6 +217,7 @@ public class RoomBuilder : MonoBehaviour, IGameOverInvoker {
                     !o.CompareTag("MissingRoomMessageButton") &&
                     !o.CompareTag("LivesRemainingText") &&
                     !o.CompareTag("MessageText") &&
+                    //!o.CompareTag("MapCanvas") &&
                     !o.CompareTag("ItemsCollectedText"))
                 Destroy(o);
         }
@@ -221,7 +231,8 @@ public class RoomBuilder : MonoBehaviour, IGameOverInvoker {
         GameObject scoreBoardCanvas = GameObject.FindGameObjectWithTag(GameConstants.SCOREBOARD);
         if (scoreBoardCanvas == null)
             scoreBoardCanvas = UnityEngine.Object.Instantiate(Resources.Load("ScoreBoard/" + GameConstants.ROOMTITLECANVAS)) as GameObject;
-        GameObject.FindGameObjectWithTag(GameConstants.ROOMTITLETEXT).GetComponent<Text>().text = this.currentRoom.GetName();
+        if (this.currentRoom != null)
+            GameObject.FindGameObjectWithTag(GameConstants.ROOMTITLETEXT).GetComponent<Text>().text = this.currentRoom.GetName();
 
         // if there is a saved state for the room
         // update the room to match this

@@ -59,6 +59,7 @@ TagManager:
   - MediumButton
   - HardButton
   - Background
+  - MapCanvas
   layers:
   - Default
   - TransparentFX

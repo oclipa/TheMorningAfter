@@ -92,6 +92,8 @@ public class GameState : MonoBehaviour, IGameOverInvoker
         EventManager.AddCreatureKilledListener(KillCreature);
         EventManager.AddPowerUpListener(CollectItem);
         EventManager.AddPlayerDiedListener(LoseLife);
+        EventManager.AddNextRoomListener(NextRoom);
+        EventManager.AddRoomVisitedListener(RoomVisited);
 
         // display an initially transparent blank screen when first started 
         // (will be used if player loses a life)
@@ -479,6 +481,10 @@ public class GameState : MonoBehaviour, IGameOverInvoker
                         sb.Append(creature);
                     }
 
+                    // serialize list of killed creatures
+                    sb.Append(":");
+                    sb.Append(room.Visited);
+
                     // room separater
                     sb.Append("/");
                 }
@@ -548,6 +554,38 @@ public class GameState : MonoBehaviour, IGameOverInvoker
         }
 
         return new string[0];
+    }
+
+    /// <summary>
+    /// Gets a boolean indicating whether the player has already visited the specified room.
+    /// </summary>
+    /// <returns>true if visited, otherwise false</returns>
+    /// <param name="roomName">Room name.</param>
+    public bool GetVisitedStatus(string roomName)
+    {
+        string stateOfRooms = RoomStateSummary;
+
+        if (!string.IsNullOrEmpty(stateOfRooms))
+        {
+            // get state of all rooms
+            string[] rooms = stateOfRooms.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // iterate over rooms looking for requested room
+            for (int r = 0; r < rooms.Length; r++)
+            {
+                string[] bits = rooms[r].Split(new char[] { ':' });
+
+                // if room name matches, return the list of creatures in the room
+                if (bits[0].Equals(roomName) && bits.Length > 2)
+                {
+                    bool visited = false;
+                    bool.TryParse(bits[3], out visited);
+                    return visited;
+                }
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -796,6 +834,29 @@ public class GameState : MonoBehaviour, IGameOverInvoker
         {
             AddWeaponToPlayer(true);
         }
+    }
+
+
+    /// <summary>
+    /// Player has entered the next room; get ready for a new roomState
+    /// </summary>
+    public void NextRoom(string nextRoom, string prevRoom, bool playDoorSound)
+    {
+        IRoom pRoom = Blueprints.GetRoom(prevRoom);
+        pRoom.Visited = true;
+        IRoom nRoom = Blueprints.GetRoom(nextRoom);
+        nRoom.Visited = true;
+        this.roomState = string.Empty;
+        Logger.Log("UPDATED GAME STATE: " + Dump());
+    }
+
+    /// <summary>
+    /// Player has visited the specified room; get ready for a new roomState
+    /// </summary>
+    public void RoomVisited(IRoom room)
+    {
+        this.roomState = string.Empty;
+        Logger.Log("UPDATED GAME STATE: " + Dump());
     }
 
     /// <summary>
