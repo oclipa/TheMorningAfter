@@ -155,6 +155,7 @@ public class MovingObstacleController : ObstacleController
             if (direction == MovementDirection.CIRCLING && rotator != null)
             {
                 rotator.enabled = true;
+                changeState(STATE_WALK_FORWARDS);
             }
             else
             {
