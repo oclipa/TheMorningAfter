@@ -93,12 +93,12 @@ public class Map : MonoBehaviour
             Color color = sr.color;
             if (fade && color.a > 0f)
             {
-                color.a -= 0.01f; // bigger number, faster fade
+                color.a -= 0.1f; // bigger number, faster fade
                 sr.color = color;
             }
             else if (!fade && color.a < 1f)
             {
-                color.a += 0.01f; // bigger number, faster reveal
+                color.a += 0.1f; // bigger number, faster reveal
                 sr.color = color;
             }
         }
