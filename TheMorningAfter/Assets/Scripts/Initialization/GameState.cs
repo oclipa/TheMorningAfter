@@ -929,4 +929,23 @@ public class GameState : MonoBehaviour, IGameOverInvoker
 
         Destroy(player);
     }
+
+    private CommandHandler commandHandler;
+
+    /// <summary>
+    /// Gets the command handler for user input
+    /// </summary>
+    /// <returns>The command handler.</returns>
+    public CommandHandler GetCommandHandler()
+    {
+        if (commandHandler == null)
+        {
+            if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android)
+                commandHandler = new MobileCommandHandler();
+            else if (Application.platform == RuntimePlatform.WebGLPlayer)
+                commandHandler = new KeyboardCommandHandler();
+        }
+
+        return commandHandler;
+    }
 }

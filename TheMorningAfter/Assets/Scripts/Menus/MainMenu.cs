@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour {
     {
         // if WebGl, we don't want to display the Quit button, so 
         // we will replace it with the help button.
-        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        if (Application.platform == RuntimePlatform.WebGLPlayer || Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android)
         {
             //loadButton = GameObject.FindGameObjectWithTag("LoadButton");
             //playButton = GameObject.FindGameObjectWithTag("PlayButton");

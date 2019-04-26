@@ -102,13 +102,13 @@ public class PlayerController : MonoBehaviour, IPlayerDiedInvoker
         if (gravityDirection > 0f)
             this.transform.Rotate(180, 0, 0);
 
-        this.commandHandler = new KeyboardCommandHandler();
-
         this.trailRenderer = GetComponent<TrailRenderer>();
 
         this.gameState = Camera.main.GetComponent<GameState>();
         if (this.gameState.PlayerHasTheWeapon)
             this.gameState.AddWeaponToPlayer(false);
+
+        this.commandHandler = this.gameState.GetCommandHandler();
     }
 
     private void Update()
