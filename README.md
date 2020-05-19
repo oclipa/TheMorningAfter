@@ -8,9 +8,7 @@ Work began again at the beginning of December 2018, with the initial Beta releas
 The final, commercial version was released March 2019 and can be experienced here: https://oclipa.itch.io/the-morning-after
 
 
-I estimate that the final project took around 300 developer-hours (very roughly equating to the order of $10,000).  
-
-In addition, it required around 30 tester-hours (of the order of $1,000).
+I estimate that the final project took around 300 developer-hours.
 
 
 V1.00 - 2019/03/06 - Initial Release
