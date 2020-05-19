@@ -11,6 +11,6 @@ The final, commercial version was released March 2019 and can be experienced her
 I estimate that the final project took around 300 developer-hours.
 
 
-* V1.00 - 2019/03/06 - Initial Release
 * V1.01 - 2019/04/24 - Added map and refined some sprites
+* V1.00 - 2019/03/06 - Initial Release
 
